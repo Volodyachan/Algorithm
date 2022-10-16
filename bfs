@@ -1,0 +1,50 @@
+#include <vector>
+#include <iostream>
+#include <queue>
+
+int main() {
+    int n;
+    std::cin >> n;
+
+    std::vector<std::vector<int>> graph(n + 1);
+    std::vector<int> dist(n + 1, 0);
+    std::queue<int> queue;
+
+    for (int i = 1; i < n + 1; ++i) {
+        for (int j = 1; j < n + 1; ++j) {
+            int a;
+            std::cin >> a;
+            if (a) {
+                graph[i].push_back(j);
+            }
+        }
+    }
+
+    int start, end;
+    std::cin >> start >> end;
+
+    if (start == end) {
+        std::cout << 0;
+        return 0;
+    }
+
+    queue.push(start);
+    while (queue.size() > 0) {
+        int current = queue.front();
+        queue.pop();
+        for (int v: graph[current]) {
+            if (dist[v] == 0) {
+                dist[v] = dist[current] + 1;
+                queue.push(v);
+            }
+        }
+    }
+
+    if (dist[end] == 0) {
+        std::cout << -1;
+    } else {
+        std::cout << dist[end];
+    }
+
+    return 0;
+}
