@@ -1,0 +1,50 @@
+#include <vector>
+#include <iostream>
+
+
+std::vector<int> parents;
+
+int find_tree(int x) {
+    if (x == parents[x]) {
+        return x;
+    }
+    return find_tree(parents[x]);
+}
+
+void union_trees(int x, int y) {
+    int parent_x = find_tree(x);
+    int parent_y = find_tree(y);
+    parents[parent_y] = parent_x;
+}
+
+int main() {
+    int n, m;
+    std::cin >> n >> m;
+
+    parents.assign(n + 1, -1);
+    std::vector<std::vector<int>> edges;
+    for (int i = 0; i < m; ++i) {
+        int a, b, c;
+        std::cin >> a >> b >> c;
+        edges.push_back({c, a, b});
+    }
+
+    std::sort(edges.begin(), edges.end());
+
+    for (int i = 1; i < n + 1; ++i) {
+        parents[i] = i;
+    }
+
+    int ans = 0;
+
+    for (auto edge: edges) {
+        if (find_tree(edge[1]) != find_tree(edge[2])) {
+            ans += edge[0];
+            union_trees(edge[1], edge[2]);
+        }
+    }
+
+    std::cout << ans;
+
+    return 0;
+}
