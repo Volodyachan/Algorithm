@@ -1,0 +1,41 @@
+#include <iostream>
+#include <vector>
+
+void dfs(const size_t &now, const std::vector<std::vector<int>> &graph, std::vector<bool> &used) {
+    used[now] = true;
+    for (const auto &neighbor: graph[now]) {
+        if (!used[neighbor]) {
+            dfs(neighbor, graph, used);
+        }
+    }
+
+}
+
+int main() {
+    int n, m;
+    std::cin >> n >> m;
+    std::vector<std::vector<int>> graph(n + 1);
+    std::vector<bool> used(n + 1, false);
+    std::vector<int> ans;
+    for (size_t i = 0; i < m; ++i) {
+        int a, b;
+        std::cin >> a >> b;
+        graph[a].push_back(b);
+        graph[b].push_back(a);
+    }
+
+    dfs(1, graph, used);
+
+    for (size_t i = 1; i < n + 1; ++i) {
+        if (used[i]) {
+            ans.push_back(i);
+        }
+    }
+
+    std::cout << ans.size() << std::endl;
+    for (const auto &neighbor: ans) {
+        std::cout << neighbor << ' ';
+    }
+
+    return 0;
+}
